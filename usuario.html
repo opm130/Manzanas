@@ -1,0 +1,455 @@
+<!-- <!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bienvenido</title>
+ 
+</head>
+<body>
+  <h1>Bienvenido, <span id="nombreUsuario"></span>!</h1>
+  
+  
+  <button id="btnDesplegarServicios">Desplegar Servicios</button>
+
+ 
+  <div id="servicios-container" style="display: none;">
+    <h2>Servicios del Usuario</h2>
+    <form id="formularioSeleccionServicio">
+      <ul id="lista-servicios"></ul>
+      <input type="datetime-local" id="fechaHora" name="fechaHora" required>
+      <button type="submit">Guardar Servicios</button>
+    </form>
+  </div>
+
+  <script>
+   
+    document.addEventListener('DOMContentLoaded', () => {
+      //const params = new URLSearchParams(window.location.search);
+      const usuario = JSON.stringify(usuario);
+      
+      document.getElementById('nombreUsuario').textContent = usuario.nombre;
+      console.log(usuario)
+      const serviciosContainer = document.getElementById('servicios-container');
+      const listaServicios = document.getElementById('lista-servicios');
+      const formularioSeleccionServicio = document.getElementById('formularioSeleccionServicio');
+      const btnDesplegarServicios = document.getElementById('btnDesplegarServicios');
+      
+     
+
+      // Evento al hacer clic en el botón para desplegar servicios
+      btnDesplegarServicios.addEventListener('click', () => {
+        // Realizar una solicitud al servidor para obtener los servicios del usuario
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', '/obtener-servicios-usuario', true);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.onreadystatechange = function () {
+          if (xhr.readyState === 4) {
+            if (xhr.status === 200) {
+              const data = JSON.parse(xhr.responseText);
+
+              // Mostrar los servicios como checkboxes
+              listaServicios.innerHTML = data.servicios.map(servicio =>
+                `<li><label><input type="checkbox" name="servicios" value="${servicio}"> ${servicio}</label></li>`
+              ).join('');
+              serviciosContainer.style.display = 'block';
+            } else {
+              console.error('Error al obtener servicios del usuario');
+            }
+          }
+        };
+        xhr.send(JSON.stringify({ usuario }));
+      });
+
+      formularioSeleccionServicio.addEventListener('submit', async (event) => {
+        event.preventDefault();
+
+        // Obtener los servicios seleccionados desde el formulario
+        const serviciosSeleccionados = Array.from(formularioSeleccionServicio.elements['servicios'])
+          .filter(checkbox => checkbox.checked)
+          .map(checkbox => checkbox.value);
+          // Obtener la fecha y hora
+        const fechaHora = formularioSeleccionServicio.elements['fechaHora'].value;
+
+
+        // Realizar una solicitud al servidor para guardar los servicios seleccionados
+        const xhrGuardarServicios = new XMLHttpRequest();
+        xhrGuardarServicios.open('POST', '/guardar-servicios-usuario', true);
+        xhrGuardarServicios.setRequestHeader('Content-Type', 'application/json');
+        xhrGuardarServicios.onreadystatechange = function () {
+          if (xhrGuardarServicios.readyState === 4) {
+            if (xhrGuardarServicios.status === 200) {
+              console.log('Servicios guardados exitosamente');
+            } else {
+              console.error('Error al guardar servicios del usuario');
+            }
+          }
+        };
+        xhrGuardarServicios.send(JSON.stringify({
+          usuario,
+          servicios: serviciosSeleccionados,
+          fechaHora: fechaHora
+        }));
+      });
+    })
+  </script>
+</body>
+</html>
+ -->
+ <!-- <!DOCTYPE html>
+ <html lang="es">
+ <head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Bienvenido</title>
+ </head>
+ <body>
+   <h1>Bienvenido, <span id="nombreUsuario"></span>!</h1>
+   
+
+   <button id="btnDesplegarServicios">Desplegar Servicios</button>
+ 
+
+   <div id="servicios-container" style="display: none;">
+    <h2>Servicios del Usuario</h2>
+    <form id="formularioSeleccionServicio">
+      <ul id="lista-servicios"></ul>
+      <input type="datetime-local" id="fechaHora" name="fechaHora" required>
+      <button type="submit">Guardar Servicios</button>
+    </form>
+  </div>
+ 
+   <script>
+     document.addEventListener('DOMContentLoaded', () => {
+       // Obtener el nombre del usuario
+       const serviciosContainer = document.getElementById('servicios-container');
+       const listaServicios = document.getElementById('lista-servicios');
+       const xhrNombreUsuario = new XMLHttpRequest();
+       xhrNombreUsuario.open('GET', '/obtener-usuario', true);
+       xhrNombreUsuario.onreadystatechange = function () {
+         if (xhrNombreUsuario.readyState === 4) {
+           if (xhrNombreUsuario.status === 200) {
+             const usuario = JSON.parse(xhrNombreUsuario.responseText);
+             document.getElementById('nombreUsuario').textContent = usuario.nombre;
+           } else {
+             console.error('Error al obtener el usuario');
+           }
+         }
+       };
+       xhrNombreUsuario.send();
+ 
+       // Evento al hacer clic en el botón para desplegar servicios
+       const btnDesplegarServicios = document.getElementById('btnDesplegarServicios');
+       btnDesplegarServicios.addEventListener('click', () => {
+        // Realizar una solicitud al servidor para obtener los servicios del usuario
+        const xhrobtener = new XMLHttpRequest();
+        xhrobtener.open('POST', '/obtener-servicios-usuario', true);
+        xhrobtener.setRequestHeader('Content-Type', 'application/json');
+        xhrobtener.onreadystatechange = function () {
+          if (xhrobtener.readyState === 4) {
+            if (xhrobtener.status === 200) {
+              const data = JSON.parse(xhrobtener.responseText);
+
+              // Mostrar los servicios como checkboxes
+              listaServicios.innerHTML = data.servicios.map(servicio =>
+                `<li><label><input type="checkbox" name="servicios" value="${servicio}"> ${servicio}</label></li>`
+              ).join('');
+              serviciosContainer.style.display = 'block';
+            } else {
+              console.error('Error al obtener servicios del usuario');
+            }
+          }
+        };
+        xhrobtener.send();
+      });
+      formularioSeleccionServicio.addEventListener('submit', async (event) => {
+        event.preventDefault();
+
+        // Obtener los servicios seleccionados desde el formulario
+        const serviciosSeleccionados = Array.from(formularioSeleccionServicio.elements['servicios'])
+          .filter(checkbox => checkbox.checked)
+          .map(checkbox => checkbox.value);
+          // Obtener la fecha y hora
+        const fechaHora = formularioSeleccionServicio.elements['fechaHora'].value;
+
+
+        // Realizar una solicitud al servidor para guardar los servicios seleccionados
+        const xhrGuardarServicios = new XMLHttpRequest();
+        xhrGuardarServicios.open('POST', '/guardar-servicios-usuario', true);
+        xhrGuardarServicios.setRequestHeader('Content-Type', 'application/json');
+        xhrGuardarServicios.onreadystatechange = function () {
+          if (xhrGuardarServicios.readyState === 4) {
+            if (xhrGuardarServicios.status === 200) {
+              console.log('Servicios guardados exitosamente');
+            } else {
+              console.error('Error al guardar servicios del usuario');
+            }
+          }
+        };
+        xhrGuardarServicios.send(JSON.stringify({
+          
+          servicios: serviciosSeleccionados,
+          fechaHora: fechaHora
+        }));
+      });
+       /* // Función para mostrar los servicios del usuario en la tabla
+       function mostrarServicios(servicios) {
+         const listaServicios = document.getElementById('lista-servicios');
+         listaServicios.innerHTML = '';
+         servicios.forEach(servicio => {
+           const row = document.createElement('tr');
+           row.innerHTML = `
+             <td>${servicio.nombre}</td>
+             <td>${servicio.fecha}</td>
+             <td><button onclick="eliminarServicio(${servicio.id})">Eliminar</button></td>
+           `;
+           listaServicios.appendChild(row);
+         });
+         document.getElementById('servicios-container').style.display = 'block';
+       } */
+ 
+       // Función para eliminar un servicio
+       /* function eliminarServicio(id) {
+         const xhrEliminarServicio = new XMLHttpRequest();
+         xhrEliminarServicio.open('DELETE', `/eliminar-servicio/${id}`, true);
+         xhrEliminarServicio.setRequestHeader('Content-Type', 'application/json');
+         xhrEliminarServicio.onreadystatechange = function () {
+           if (xhrEliminarServicio.readyState === 4) {
+             if (xhrEliminarServicio.status === 200) {
+               // Actualizar la lista de servicios después de eliminar
+               btnDesplegarServicios.click(); // Simular clic en el botón de desplegar servicios
+             } else {
+               console.error('Error al eliminar servicio');
+             }
+           }
+         };
+         xhrEliminarServicio.send();
+       } */
+     });
+   </script>
+ </body>
+ </html>
+  -->
+  <!DOCTYPE html>
+  <html lang="es">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bienvenido</title>
+  </head>
+  <body>
+    <h1>Bienvenido, <span id="nombreUsuario"></span>!</h1>
+    
+    <!-- Botón para desplegar servicios -->
+    <button id="btnDesplegarServicios">Desplegar Servicios</button>
+  
+    <!-- Contenedor para mostrar los servicios del usuario -->
+    <div id="servicios-container" style="display: none;">
+      <form id="formularioSeleccionServicio">
+      <h2>Servicios del Usuario</h2>
+      <table id="tabla-servicios">
+        <thead>
+          <tr>
+            <th>Servicio</th>
+            <th>Seleccionar</th>
+          </tr>
+        </thead>
+        <tbody id="lista-servicios"></tbody>
+      </table>
+      
+        <input type="datetime-local" id="fechaHora" name="fechaHora" required>
+        <button type="submit">Guardar Servicios</button>
+      </form>
+    </div>
+  
+    <button id="btnDesplegarServiciosGuardados">Desplegar Servicios Guardados</button>
+  
+  <!-- Contenedor para mostrar los servicios guardados -->
+  <div id="servicios-guardados-container" style="display: none;">
+    <h2>Servicios Guardados</h2>
+    <table id="tabla-servicios-guardados">
+      <thead>
+        <tr>
+          <th>Fecha</th>
+          <th>Servicio</th>
+        </tr>
+      </thead>
+      <tbody id="lista-servicios-guardados"></tbody>
+    </table>
+  </div>
+  <!-- Botón para cerrar sesión -->
+<button id="btnCerrarSesion">Cerrar Sesión</button>
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const serviciosContainer = document.getElementById('servicios-container');
+        const tablaServicios = document.getElementById('tabla-servicios');
+        const listaServicios = document.getElementById('lista-servicios');
+        const btnDesplegarServicios = document.getElementById('btnDesplegarServicios');
+  
+        // Obtener el nombre del usuario
+        const xhrNombreUsuario = new XMLHttpRequest();
+        xhrNombreUsuario.open('GET', '/obtener-usuario', true);
+        xhrNombreUsuario.onreadystatechange = function () {
+          if (xhrNombreUsuario.readyState === 4) {
+            if (xhrNombreUsuario.status === 200) {
+              const usuario = JSON.parse(xhrNombreUsuario.responseText);
+              document.getElementById('nombreUsuario').textContent = usuario.nombre;
+            } else {
+              console.error('Error al obtener el usuario');
+            }
+          }
+        };
+        xhrNombreUsuario.send();
+  
+        // Evento al hacer clic en el botón para desplegar servicios
+        btnDesplegarServicios.addEventListener('click', () => {
+          const xhrobtener = new XMLHttpRequest();
+          xhrobtener.open('POST', '/obtener-servicios-usuario', true);
+          xhrobtener.setRequestHeader('Content-Type', 'application/json');
+          xhrobtener.onreadystatechange = function () {
+            if (xhrobtener.readyState === 4) {
+              if (xhrobtener.status === 200) {
+                const data = JSON.parse(xhrobtener.responseText);
+  
+                // Mostrar los servicios en la tabla
+                listaServicios.innerHTML = ''; // Limpiar la tabla antes de llenarla
+                data.servicios.forEach(servicio => {
+                  const row = document.createElement('tr');
+                  row.innerHTML = `
+                    <td>${servicio}</td>
+                    <td><input type="checkbox" name="servicios" value="${servicio}"></td>
+                  `;
+                  listaServicios.appendChild(row);
+                });
+                serviciosContainer.style.display = 'block';
+  
+              } else {
+                console.error('Error al obtener servicios del usuario');
+              }
+            }
+          };
+          xhrobtener.send();
+        });
+        
+        // Evento para enviar los servicios seleccionados al servidor
+        const formularioSeleccionServicio = document.getElementById('formularioSeleccionServicio');
+        console.log(formularioSeleccionServicio);
+        formularioSeleccionServicio.addEventListener('submit', async (event) => {
+          event.preventDefault();
+          console.log(formularioSeleccionServicio.elements['servicios']);
+          // Obtener los servicios seleccionados desde el formulario
+          const serviciosSeleccionados = Array.from(formularioSeleccionServicio.elements['servicios'])
+            .filter(checkbox => checkbox.checked)
+            .map(checkbox => checkbox.value);
+          // Obtener la fecha y hora
+          const fechaHora = formularioSeleccionServicio.elements['fechaHora'].value;
+  
+          // Realizar una solicitud al servidor para guardar los servicios seleccionados
+          const xhrGuardarServicios = new XMLHttpRequest();
+          xhrGuardarServicios.open('POST', '/guardar-servicios-usuario', true);
+          xhrGuardarServicios.setRequestHeader('Content-Type', 'application/json');
+          xhrGuardarServicios.onreadystatechange = function () {
+            if (xhrGuardarServicios.readyState === 4) {
+              if (xhrGuardarServicios.status === 200) {
+                alert("Servicio guardado");
+                window.location.reload();
+              } else {
+                console.error('Error al guardar servicios del usuario');
+              }
+            }
+          };
+          xhrGuardarServicios.send(JSON.stringify({
+            servicios: serviciosSeleccionados,
+            fechaHora: fechaHora
+          }));
+        });
+        // Evento para enviar los servicios guardados
+        const btnDesplegarServiciosGuardados = document.getElementById('btnDesplegarServiciosGuardados');
+        const serviciosGuardadosContainer = document.getElementById('servicios-guardados-container');
+        const listaServiciosGuardados = document.getElementById('lista-servicios-guardados');
+  
+        btnDesplegarServiciosGuardados.addEventListener('click', () => {
+        // Realizar una solicitud AJAX para obtener los servicios guardados por el usuario
+        const xhrObtenerServiciosGuardados = new XMLHttpRequest();
+        xhrObtenerServiciosGuardados.open('POST', '/obtener-servicios-guardados', true);
+        xhrObtenerServiciosGuardados.onreadystatechange = function () {
+          if (xhrObtenerServiciosGuardados.readyState === 4) {
+            if (xhrObtenerServiciosGuardados.status === 200) {
+              const data = JSON.parse(xhrObtenerServiciosGuardados.responseText);
+  
+            // Limpiar la lista antes de llenarla
+           // listaServiciosGuardados.innerHTML = '';
+  
+            // Mostrar los servicios guardados en la tabla
+            listaServiciosGuardados.innerHTML = 
+            data.serviciosGuardados.map(servicio => 
+              `
+                <tr>
+                  <td>${servicio.Nombre}</td>
+                  <td>${servicio.Fecha}</td>
+                  <td><button onclick="eliminarServicio(${servicio.id})">Eliminar</button></td>
+                  <!-- Agrega más columnas si es necesario -->
+                </tr>
+              `).join('');
+        
+  
+            // Mostrar el contenedor de servicios guardados
+            serviciosGuardadosContainer.style.display = 'block';
+          } else {
+            console.error('Error al obtener servicios guardados');
+          }
+        }
+      };
+      xhrObtenerServiciosGuardados.send();
+    });
+    const btnCerrarSesion = document.getElementById('btnCerrarSesion');
+
+    btnCerrarSesion.addEventListener('click', () => {
+      // Realizar una solicitud al servidor para cerrar la sesión
+      const xhrCerrarSesion = new XMLHttpRequest();
+      xhrCerrarSesion.open('POST', '/cerrar-sesion', true);
+      xhrCerrarSesion.onreadystatechange = function () {
+        if (xhrCerrarSesion.readyState === 4) {
+          if (xhrCerrarSesion.status === 200) {
+            // Redirigir a la página de inicio de sesión o cualquier otra página deseada
+            window.location.href = '/index.html';
+          } else {
+            console.error('Error al cerrar sesión');
+          }
+        }
+      };
+      xhrCerrarSesion.send();
+    });
+ // Evitar que el usuario vuelva atrás utilizando el botón de retroceso del navegador
+ window.onload = function () {
+      window.history.forward();
+    };
+    window.onpageshow = function (evt) {
+      if (evt.persisted) {
+        window.location.reload();
+      }
+    };
+      });
+      function eliminarServicio(id) {
+      console.log(id);
+      const xhrEliminarServicio = new XMLHttpRequest();
+      xhrEliminarServicio.open('DELETE', `/eliminar-servicio/${id}`, true);
+      xhrEliminarServicio.setRequestHeader('Content-Type', 'application/json');
+      xhrEliminarServicio.onreadystatechange = function () {
+          if (xhrEliminarServicio.readyState === 4) {
+              if (xhrEliminarServicio.status === 200) {
+                  // Actualizar la lista de servicios después de eliminar
+                  obtenerServiciosGuardados(); // Llama a una función para actualizar la lista de servicios
+              } else {
+                  console.error('Error al eliminar servicio');
+              }
+          }
+      };
+      xhrEliminarServicio.send();
+  }
+    
+    </script>
+  </body>
+  </html>
+
+  
